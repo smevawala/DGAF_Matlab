@@ -1,41 +1,44 @@
 %Code : AODV Routing.
 clc;
 clear all;
-size=20;
+size=25;
 x=1:size;
 s1=1;
-d1=20;
-% con=[0 0 0 1];
-A=randi([-5 1],size);
-A(A<1)=0;
-A=A.*randi([1 15],size);
+d1=24;
+
+
+% A=randi([-5 1],size);
+% A(A<1)=0;
+% A=A.*randi([1 15],size);
+B=load('cost.mat');
+A=B.cost;
 
 % Making matrix all diagonals=0 and A(i,j)=A(j,i),i.e. A(1,4)=a(4,1),
 % A(6,7)=A(7,6)
-for i=1:size
-        for j=1:size
-                if i==j
-                    A(i,j)=0;
-                else
-                    A(j,i)=A(i,j);
-                end
-        end
-end
+% for i=1:size
+%         for j=1:size
+%                 if i==j
+%                     A(i,j)=0;
+%                 else
+%                     A(j,i)=A(i,j);
+%                 end
+%         end
+% end
 % disp(A);
 % disp(t);
 
 
  
 %  disp(A);
- stat=zeros(1,20);
- stat(1)=1;
-dist=inf(1,20);
+ stat=zeros(1,size);
+ stat(s1)=1;
+dist=inf(1,size);
 % next=zeros(1,20);
 dist(s1)=0;
 % dist(2)=0;
 next(s1)=0;
  
- for i=2:20
+ for i=1:size
     
      if A(i,s1)~=0
         dist(i)=A(i,s1);
@@ -44,7 +47,7 @@ next(s1)=0;
  end
  
  flag=0;
- for i=2:20 
+ for i=1:size 
         if A(s1,i)>0 %to all neighbors
             disp([' node 1 sends RREQ to node ' num2str(i)])
                 if i==d1
@@ -99,7 +102,7 @@ next(s1)=0;
         
  end
   
- i=20;
+ i=d1;
  count=1;
  route(count)=d1;
  
