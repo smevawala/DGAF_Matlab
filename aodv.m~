@@ -4,7 +4,7 @@ clear all;
 size=25;
 x=1:size;
 s1=1;
-d1=25;
+d1=24;
 
 
 % A=randi([-5 1],size);
@@ -12,7 +12,7 @@ d1=25;
 % A=A.*randi([1 15],size);
 B=load('cost.mat');
 B.cost;
-A=B.cost.*(.2*rand(25)+1);
+
 
 
  
