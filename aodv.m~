@@ -1,27 +1,30 @@
-
+% Wireless Final Project
+% Shivam, Neema, Nicobitch
 
 %Code : AODV Routing.
-clc;
+% clc;
 clear all;
 size=25;
-x=1:size;
+nit=1000;
+tA=zeros(1,nit);
+tA1=zeros(1,nit);
+len=zeros(1,nit);
+len1=zeros(1,nit);
 s1=1;
 d1=25;
 
-k=5;
+k=2;
 
 % A=randi([-5 1],size);
 % A(A<1)=0;
 % A=A.*randi([1 15],size);
 B=load('cost.mat');
-B.cost;
+
+for kkk=1:nit
 A=2.*B.cost.*(.2*rand(25)+1);
 A1=A;
 A1(A>k)=A(A>k)-k;
 A1(A<k&A>0)=A(A<k&A>0)*.35;
-
-
-
 
  
 %  disp(A);
@@ -43,7 +46,7 @@ dist1(s1)=0;
     
      if A(i,s1)~=0
         dist(i)=A(i,s1);
-        disp([' node 1 sends RREQ to node ' num2str(i)])
+%         disp([' node 1 sends RREQ to node ' num2str(i)])
         next(i)=s1;
      end
      
@@ -77,7 +80,7 @@ dist1(s1)=0;
     if min==Inf
         error('no connection')
     end
-    node
+%     node
     for i=1:size
         if A(i,node)>0
            if (dist(node) + A(i,node))<dist(i)
@@ -86,9 +89,7 @@ dist1(s1)=0;
            end
         end
     end
-    
-    
-    
+     
 
     stat(node)=1;
     
@@ -108,7 +109,7 @@ dist1(s1)=0;
     if min==Inf
         error('no connection')
     end
-    node
+%     node
     for i=1:size
         if A1(i,node)>0
            if (dist1(node) + A1(i,node))<dist1(i)
@@ -118,15 +119,11 @@ dist1(s1)=0;
         end
     end
     
-    
-    
-
     stat1(node)=1;
     
         
  end
- 
- 
+  
  
  i=d1;
  count=1;
@@ -134,45 +131,50 @@ dist1(s1)=0;
  
  
  
- 
  while next(i) ~=s1
-     disp([' Node ' num2str(i) ' sends RREP message to node ' num2str(next(i))])
+%      disp([' Node ' num2str(i) ' sends RREP message to node ' num2str(next(i))])
      i=next(i);
      count=count+1;
      route(count)=i;
  end
  
  
- disp([ ' Node ' num2str(i) ' sends RREP message to node 1'])
+%  disp([ ' Node ' num2str(i) ' sends RREP message to node 1'])
  
 
  
- disp([' Node ' num2str(s1)])
+%  disp([' Node ' num2str(s1)])
  for i=count: -1:1
-     disp([ ' Sends message to node ' num2str(route(i))])
+%      disp([ ' Sends message to node ' num2str(route(i))])
  end
- 
- 
- 
  
  
  i=d1;
  count1=1;
  route1(count1)=d1;
- total=0;
+ total_A1=0;
  
- 
- 
+  
  while next1(i) ~=s1
-     disp([' Node ' num2str(i) ' sends RREP message to node ' num2str(next1(i))])
-     total=total+A(i,next(i))
+%      disp([' Node ' num2str(i) ' sends RREP message to node ' num2str(next1(i))])
+     total_A1=total_A1+A(i,next(i));
      i=next1(i);
      count1=count1+1;
      route1(count1)=i;
 
  end
- total=total+A(i,s1)
-  disp([' Node ' num2str(s1)])
+ total_A1=total_A1+A(i,s1);
+%   disp([' Node ' num2str(s1)])
  for i=count1: -1:1
-     disp([ ' Sends message to node ' num2str(route1(i))])
+%      disp([ ' Sends message to node ' num2str(route1(i))])
  end
+ 
+ total_A = dist(d1);
+ tA(kkk)=total_A;
+ tA1(kkk)=total_A1;
+ len(kkk)=length(route)+1;
+ len1(kkk)=length(route1)+1;
+ 
+end
+Mc=mean((tA1-tA)./tA)
+Ml=mean((len1-len)./len)
