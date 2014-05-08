@@ -4,27 +4,40 @@
 %Code : AODV Routing.
 % clc;
 clear all;
+close all;
 size=25;
-nit=5000;
+nit=3000;
 tA=zeros(1,nit);
 tA1=zeros(1,nit);
 len=zeros(1,nit);
 len1=zeros(1,nit);
 s1=1;
 d1=25;
+nn=18;
+Mc=zeros(1,nn);
+Ml=zeros(1,nn);
+ks=zeros(1,nn);
+h = waitbar(0,'Please wait...');
+B=load('cost.mat');
+% B.cost=sqrt(B.cost);
+% D=load('D.mat');
+% Db=D.D^2;
 
-k=2;
-
+for hill=1:nn
+k=1.1+.1*(hill-1);
+y=.45;
+input=[k y];
+ks(hill)=k;
 % A=randi([-5 1],size);
 % A(A<1)=0;
 % A=A.*randi([1 15],size);
-B=load('cost.mat');
+
 
 for kkk=1:nit
 A=2.*B.cost.*(.2*rand(25)+1);
 A1=A;
 A1(A>k)=A(A>k)-k;
-A1(A<k&A>0)=A(A<k&A>0)*.35;
+A1(A<k&A>0)=A(A<k&A>0)*y;
 
  
 %  disp(A);
@@ -127,7 +140,7 @@ dist1(s1)=0;
  
  i=d1;
  count=1;
- route(count)=d1;
+ route=[d1];
  
  
  
@@ -135,7 +148,7 @@ dist1(s1)=0;
 %      disp([' Node ' num2str(i) ' sends RREP message to node ' num2str(next(i))])
      i=next(i);
      count=count+1;
-     route(count)=i;
+     route=cat(2,route,i);
  end
  
  
@@ -151,16 +164,16 @@ dist1(s1)=0;
  
  i=d1;
  count1=1;
- route1(count1)=d1;
+ route1=[d1];
  total_A1=0;
  
   
  while next1(i) ~=s1
 %      disp([' Node ' num2str(i) ' sends RREP message to node ' num2str(next1(i))])
-     total_A1=total_A1+A(i,next(i));
+     total_A1=total_A1+A(i,next1(i));
      i=next1(i);
      count1=count1+1;
-     route1(count1)=i;
+     route1=cat(2,route1,i);
 
  end
  total_A1=total_A1+A(i,s1);
@@ -176,5 +189,11 @@ dist1(s1)=0;
  len1(kkk)=length(route1)+1;
  
 end
-Mc=mean((tA1-tA)./tA)
-Ml=mean((len1-len)./len)
+
+Mc(hill)=mean((tA1-tA)./tA)
+Ml(hill)=mean((len1-len)./len)
+
+waitbar(hill/nn,h)
+
+end 
+
